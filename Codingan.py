@@ -1,12 +1,6 @@
 import socket
 import os
 
-def create_http_response(content):
-    response = f"HTTP/1.1 200 OK\r\nContent-Length: {len(content)}\r\n\r\n".encode(
-        'utf-8')
-    response += content
-    return response
-
 def handle_http_request(request):
     method, path, _ = request.split('\n')[0].split()
     path = path[1:]
@@ -17,7 +11,9 @@ def handle_http_request(request):
             with open(path, 'rb') as file:
                 file_content = file.read()
             server_respone = "HTTP/1.1 200 OK\r\n"
-            response = create_http_response(file_content)
+            response = f"HTTP/1.1 200 OK\r\nContent-Length: {len(file_content)}\r\n\r\n".encode(
+                'utf-8')
+            response += file_content
         else:
             server_respone = "HTTP/1.1 404 Not Found"
             response = "HTTP/1.1 404 Not Found\r\n\r\nFile not found".encode('utf-8')
